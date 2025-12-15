@@ -1,39 +1,26 @@
 import { mockGifs } from './mock-data/gifs.mock'
+import { CustomHeader } from './shared/components/CustomHeader'
+import { SearchBar } from './shared/components/SearchBar'
+import { PreviousSearches } from './gifs/components/PreviousSearches'
+import { GifList } from './gifs/components/GifList'
+import { useState } from 'react'
 
 export const GifsApp = () => {
+    const [previousSearches, setPreviousSearches] = useState(['pokemon']);
+
+    const handlePreviousSearchClick = (term: string) => {
+        console.log({ term });
+    }
+
     return (
         <>
-            <div className="content-center">
-                <h1>Buscador de Gifs</h1>
-                <p>Descubre y comparte el gif perfecto</p>
-            </div>
+            <CustomHeader title="Buscador de Gifs" description="Descubre y comparte el Gif perfecto" />
 
-            <div className="search-container">
-                <input type="text" placeholder="Buscar gifs" />
-                <button>Buscar</button>
-            </div>
+            <SearchBar placeHolder="Buscar lo que quieras" />
 
-            <div className="previous-searches">
-                <h2>Búsquedas previas</h2>
-                <ul className="previous-searches-list">
-                    <li>Goku</li>
-                    <li>Saitama</li>
-                    <li>Elden Ring</li>
-                    <li>Shrek</li>
-                </ul>
-            </div>
+            <PreviousSearches searches={ previousSearches } onPreviousSearchClick={ handlePreviousSearchClick } />
 
-            <div className="gifs-container">
-                {
-                    mockGifs.map(gif => (
-                        <div key={ gif.id } className="gif-card">
-                            <img src={ gif.url } alt={ gif.title } />
-                            <h3>{ gif.title }</h3>
-                            <p>{ gif.width }x{ gif.height } (1.5 MB)</p>
-                        </div>
-                    ))
-                }
-            </div>
+            <GifList gifs={ mockGifs } />
         </>
     );
 }
