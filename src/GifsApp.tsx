@@ -13,7 +13,15 @@ export const GifsApp = () => {
     }
 
     const handleSearch = (query: string) => {
-        console.log({ query });
+        // console.log({ query });
+
+        query = query.toLocaleLowerCase().trim();
+
+        if (!query) return;
+
+        if (previousSearches.includes(query)) return;
+
+        setPreviousSearches(prev => [ query, ...prev.splice(0, 7) ]);
     }
 
     return (
