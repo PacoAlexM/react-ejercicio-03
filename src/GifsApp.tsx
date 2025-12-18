@@ -1,18 +1,20 @@
-import { mockGifs } from './mock-data/gifs.mock'
 import { CustomHeader } from './shared/components/CustomHeader'
 import { SearchBar } from './shared/components/SearchBar'
 import { PreviousSearches } from './gifs/components/PreviousSearches'
 import { GifList } from './gifs/components/GifList'
 import { useState } from 'react'
+import { getGifsByQuery } from './gifs/actions/get-gifs-by-query.action'
+import type { Gif } from './gifs/interfaces/gif.interface'
 
 export const GifsApp = () => {
-    const [previousSearches, setPreviousSearches] = useState(['pokemon']);
+    const [previousSearches, setPreviousSearches] = useState<string[]>([]);
+    const [gifs, setGifs] = useState<Gif[]>([]);
 
     const handlePreviousSearchClick = (term: string) => {
         console.log({ term });
     }
 
-    const handleSearch = (query: string) => {
+    const handleSearch = async (query: string) => {
         // console.log({ query });
 
         query = query.toLocaleLowerCase().trim();
@@ -22,6 +24,12 @@ export const GifsApp = () => {
         if (previousSearches.includes(query)) return;
 
         setPreviousSearches(prev => [ query, ...prev.splice(0, 7) ]);
+
+        const gifResponse = await getGifsByQuery(query);
+
+        // console.log({gifs});
+
+        setGifs(gifResponse);
     }
 
     return (
@@ -32,7 +40,7 @@ export const GifsApp = () => {
 
             <PreviousSearches searches={ previousSearches } onPreviousSearchClick={ handlePreviousSearchClick } />
 
-            <GifList gifs={ mockGifs } />
+            <GifList gifs={ gifs } />
         </>
     );
 }
